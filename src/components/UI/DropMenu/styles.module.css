@@ -1,0 +1,66 @@
+.main {
+	height: 30px;
+	width: 10px;
+
+	position: relative;
+}
+
+.main:hover .dropList {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: all;
+}
+
+.dropList {
+	opacity: 0;
+	transform: translateY(-20px);
+	pointer-events: none;
+
+	position: absolute;
+	/* top: -100%; */
+	top: 0%;
+	left: -60px;
+
+	width: 80px;
+
+	padding-top: 30px;
+
+	transition: 0.5s;
+}
+
+.points {
+	border-radius: 50%;
+	background: #fff;
+
+	width: 10px;
+	height: 10px;
+
+	margin-top: 100%;
+}
+
+.points::after {
+	content: "";
+
+	display: block;
+
+	border-radius: 50%;
+	background: #fff;
+
+	width: 10px;
+	height: 10px;
+}
+
+.points::before {
+	content: "";
+
+	display: block;
+
+	position: relative;
+	bottom: 100%;
+
+	border-radius: 50%;
+	background: #fff;
+
+	width: 10px;
+	height: 10px;
+}

@@ -1,0 +1,17 @@
+.main{
+	background: #fff;
+	border-radius: 8px;
+
+	padding: 5px;
+}
+
+.link {
+	color: #000;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.link:hover {
+	font-weight: bold;
+}

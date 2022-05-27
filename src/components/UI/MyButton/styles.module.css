@@ -1,0 +1,7 @@
+.button {
+	padding: 5px 15px;
+    color: cornflowerblue;
+    background: transparent;
+    border: 1px solid cornflowerblue;
+    cursor: pointer;
+}
