@@ -1,7 +1,6 @@
-import React from 'react'
+import React from "react";
 
 export interface IDropMenu {
-	children?: React.ReactChild
-	selectList: any
+    children?: React.ReactChild
+    selectList: any
 }
-

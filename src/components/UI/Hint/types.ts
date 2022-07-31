@@ -1,3 +1,3 @@
 export interface IHint {
-	children: React.ReactChild
+    children: React.ReactChild
 }

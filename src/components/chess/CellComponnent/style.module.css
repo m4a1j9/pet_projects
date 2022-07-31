@@ -1,0 +1,36 @@
+.cell {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.black {
+    background: #c39261;
+}
+
+.white {
+    background: #e0d7cb;
+}
+
+.figure {
+    width: 48px;
+    height: 48px;
+    position: relative;
+}
+
+.selected {
+    background: #9396d4;
+}
+
+.available {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #85d26a;
+}
+
+.attack {
+    background: #e27777;
+}

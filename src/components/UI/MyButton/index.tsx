@@ -1,21 +1,21 @@
-import React, { FC } from 'react'
-import { useTypedSelector } from '../../../hooks/useTypedSelector'
-import styles from './styles.module.css'
-import { ButtonInt } from './types'
+import React, { FC } from "react";
 
-export const MyButton: FC<ButtonInt> = ({ children, action }) => {
-	const state = useTypedSelector((state) => state)
-	return (
-		<button
-			className={styles.button}
-			onClick={(event) => {
-				event.preventDefault()
-				return action(event)
-			}}
-		>
-			{children}
-		</button>
-	)
-}
+import styles from "./styles.module.css";
+import { ButtonInt } from "./types";
 
-export default MyButton
+export const MyButton: FC<ButtonInt> = ({ children, action, isDis }) => {
+    return (
+        <button
+            className={styles.button}
+            onClick={(event) => {
+                event.preventDefault();
+                return action(event);
+            }}
+            disabled={isDis ?? false}
+        >
+            {children}
+        </button>
+    );
+};
+
+export default MyButton;

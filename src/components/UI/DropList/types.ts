@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 
 export interface IDropList {
-	children?: React.ReactChild
-	dropList: IDropListValue[]
+    children?: React.ReactChild
+    dropList: IDropListValue[]
 }
 
 export interface IDropListValue {
-	action: LogOutFunction
-	title: string
+    action: LogOutFunction
+    title: string
 }
 
 export type LogOutFunction = () => void

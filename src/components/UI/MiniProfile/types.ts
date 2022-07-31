@@ -1,13 +1,12 @@
-import React from 'react'
-import { AvatarMode } from '../Avatar/types'
+import React from "react";
 
 export interface IMainProfile {
-	children?: React.ReactChild
-	userName: string
-	avatar: IAvatar
+    children?: React.ReactChild
+    userName: string
+    avatar: IAvatar
 }
 
 interface IAvatar {
-	picture: string
-	mode: AvatarMode
+    picture: string
+    mode: "circle" | "rectangle"
 }

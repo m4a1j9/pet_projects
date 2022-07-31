@@ -1,112 +1,118 @@
-import validator from 'email-validator'
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { signUpUser } from '../../asincActions/signUpUser'
-import SignUpForm from '../../components/UI/SignUpForm'
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-import { HintCaseType, HintsActions } from '../../store/types/hintsReducerTypes'
-import { IinputAction, InputTypes } from '../../store/types/inputReducerTypes'
+import validator from "email-validator";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import SignUpForm from "../../components/SignUpForm";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
+import { userAPI } from "../../services/UserService";
+import { authSlice } from "../../store/reducers/authReducer";
+import { buttonSlice } from "../../store/reducers/buttonReducer";
+import { hintsSlice } from "../../store/reducers/hintsReducer";
+import { inputSlice } from "../../store/reducers/inputReducer";
+import { usersSlice } from "../../store/reducers/usersReducer";
+import { IUser } from "../../store/types/usersReducerTypes";
+import { Links } from "../../types/links";
+import { LS, LSMode, LocalStorage } from "../../types/localStorage";
 
 const SignUp = () => {
-	const dispatch = useDispatch()
-	const { users, loading, error } = useTypedSelector(
-		(state) => state.usersReducer,
-	)
-	const { login, password, email, name } = useTypedSelector(
-		(state) => state.inputReducer,
-	)
+    const dispatch = useTypedDispatch();
+    const navigate = useNavigate();
+    const { showLoginHint, showEmailHint, showPasswordHint, showNameHint } =
+        hintsSlice.actions;
+    const { isSignUpButton } = buttonSlice.actions;
+    const { setEmail, setLogin, setName, setPassworD } = inputSlice.actions;
+    const { setCurrentId, setCurrentColor, setCurrentName } = usersSlice.actions;
+    const { userLogIn } = authSlice.actions;
+    const { login, password, email, name } = useTypedSelector(
+        (state) => state.input,
+    );
+    const { isDisSignUp } = useTypedSelector((state) => state.button);
+    const [createUser, { isError, isLoading }] = userAPI.useCreateUserMutation();
 
-	function putData() {
-		dispatch<any>(signUpUser(login, password, email, name))
-	}
+    async function putData() {
+        if (isDisSignUp) {
+            return;
+        }
+        await createUser({
+            login,
+            password,
+            email,
+            userName: name,
+        } as IUser)
+            .unwrap()
+            .then((fulfilled) => {
+                dispatch(setCurrentId(+fulfilled.id));
+                dispatch(setCurrentColor(fulfilled.color));
+                dispatch(setCurrentName(fulfilled.userName));
+                dispatch(userLogIn(true));
+                LS(LocalStorage.isAuth, true, LSMode.set);
+                navigate(Links.profile, { replace: true });
+            })
+            .catch((rejected) => console.error(rejected));
+    }
 
-	function setLogin(event: React.ChangeEvent<HTMLInputElement>) {
-		if (event.target.value.length > 5) {
-			dispatch<IinputAction>({
-				type: InputTypes.SET_LOGIN,
-				value: event.target.value,
-			})
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_LOGIN_HINT,
-				loginHint: false,
-			})
-		} else {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_LOGIN_HINT,
-				loginHint: true,
-			})
-		}
-	}
+    function setLoginF(event: React.ChangeEvent<HTMLInputElement>) {
+        if (event.target.value.length > 5) {
+            dispatch(setLogin(event.target.value));
+            dispatch(showLoginHint(false));
+            dispatch(isSignUpButton(false));
+        } else {
+            dispatch(showLoginHint(true));
+            dispatch(isSignUpButton(true));
+        }
+    }
 
-	function setEmail(event: React.ChangeEvent<HTMLInputElement>) {
-		if (validator.validate(event.target.value)) {
-			dispatch<IinputAction>({
-				type: InputTypes.SET_EMAIL,
-				value: event.target.value,
-			})
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_EMAIL_HINT,
-				emailHint: false,
-			})
-		} else {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_EMAIL_HINT,
-				emailHint: true,
-			})
-		}
-	}
+    function setEmailF(event: React.ChangeEvent<HTMLInputElement>) {
+        if (validator.validate(event.target.value)) {
+            dispatch(setEmail(event.target.value));
+            dispatch(showEmailHint(false));
+            dispatch(isSignUpButton(false));
+        } else {
+            dispatch(showEmailHint(true));
+            dispatch(isSignUpButton(true));
+        }
+    }
 
-	function setPassword(event: React.ChangeEvent<HTMLInputElement>) {
-		if (event.target.value.length > 5) {
-			dispatch<IinputAction>({
-				type: InputTypes.SET_PASSWORD,
-				value: event.target.value,
-			})
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_PASSWORD_HINT,
-				passwordHint: false,
-			})
-		} else {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_PASSWORD_HINT,
-				passwordHint: true,
-			})
-		}
-	}
+    function setPasswordF(event: React.ChangeEvent<HTMLInputElement>) {
+        if (event.target.value.length > 5) {
+            dispatch(setPassworD(event.target.value));
+            dispatch(showPasswordHint(false));
+            dispatch(isSignUpButton(false));
+        } else {
+            dispatch(showPasswordHint(true));
+            dispatch(isSignUpButton(true));
+        }
+    }
 
-	function setName(event: React.ChangeEvent<HTMLInputElement>) {
-		if (event.target.value.length > 5) {
-			dispatch<IinputAction>({
-				type: InputTypes.SET_NAME,
-				value: event.target.value,
-			})
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_NAME_HINT,
-				nameHint: false,
-			})
-		} else {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_NAME_HINT,
-				nameHint: true,
-			})
-		}
-	}
+    function setNameF(event: React.ChangeEvent<HTMLInputElement>) {
+        if (event.target.value.length > 5) {
+            dispatch(setName(event.target.value));
+            dispatch(showNameHint(false));
+            dispatch(isSignUpButton(false));
+        } else {
+            dispatch(showNameHint(true));
+            dispatch(isSignUpButton(true));
+        }
+    }
 
-	return (
-		<div>
-			<SignUpForm
-				inputActionTypes={{
-					login: setLogin,
-					password: setPassword,
-					email: setEmail,
-					name: setName,
-				}}
-				buttonAction={putData}
-			></SignUpForm>
-			{loading ? <h1>...loading</h1> : null}
-			{error ? <h1>{error}</h1> : null}
-		</div>
-	)
-}
+    return (
+        <div>
+            <SignUpForm
+                inputActionTypes={{
+                    login: setLoginF,
+                    password: setPasswordF,
+                    email: setEmailF,
+                    name: setNameF,
+                }}
+                buttonProps={{
+                    buttonAction: putData,
+                    isDisButton: isDisSignUp,
+                }}
+            ></SignUpForm>
+            {isLoading ? <h1>...loading</h1> : null}
+            {isError ? <h1>{isError}</h1> : null}
+        </div>
+    );
+};
 
-export default SignUp
+export default SignUp;

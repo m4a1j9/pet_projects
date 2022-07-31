@@ -1,34 +1,30 @@
-import {
-	IinputAction,
-	InputTypes,
-	IinputState,
-} from '../types/inputReducerTypes'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IinputState } from "../types/inputReducerTypes";
 
-const defaultState: IinputState = {
-	login: '',
-	password: '',
-	email: '',
-	name: '',
-}
+const initialState: IinputState = {
+    login: "",
+    password: "",
+    email: "",
+    name: "",
+};
 
-export const inputReducer = (
-	state = defaultState,
-	action: IinputAction,
-): IinputState => {
-	switch (action.type) {
-		case InputTypes.SET_LOGIN:
-			return { ...state, login: action.value }
+export const inputSlice = createSlice({
+    name: "input",
+    initialState,
+    reducers: {
+        setLogin(state, action: PayloadAction<string>) {
+            state.login = action.payload;
+        },
+        setPassworD(state, action: PayloadAction<string>) {
+            state.password = action.payload;
+        },
+        setEmail(state, action: PayloadAction<string>) {
+            state.email = action.payload;
+        },
+        setName(state, action: PayloadAction<string>) {
+            state.name = action.payload;
+        },
+    },
+});
 
-		case InputTypes.SET_PASSWORD:
-			return { ...state, password: action.value }
-
-		case InputTypes.SET_EMAIL:
-			return { ...state, email: action.value }
-
-		case InputTypes.SET_NAME:
-			return { ...state, name: action.value }
-
-		default:
-			return state
-	}
-}
+export default inputSlice.reducer;

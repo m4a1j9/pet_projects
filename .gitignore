@@ -2,6 +2,7 @@
 
 # system
 /.vscode
+/.idea
 
 # dependencies
 /node_modules
@@ -33,3 +34,5 @@ yarn-error.log*
 todo.js
 tsconfig.json
 yarn.lock
+
+/ignore_folder

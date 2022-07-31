@@ -1,35 +1,38 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import Avatar from '../../components/UI/Avatar'
-import { AvatarMode } from '../../components/UI/Avatar/types'
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-import { IusersState } from '../../store/types/usersReducerTypes'
-import styles from './styles.module.css'
+import React from "react";
+
+import Avatar from "../../components/UI/Avatar";
+import { useTypedSelector } from "../../hooks/redux";
+import { userAPI } from "../../services/UserService";
+import styles from "./styles.module.css";
 
 const Profile = () => {
-	const { loading, error } = useTypedSelector(
-		(state) => state.usersReducer,
-	)
+    const { currentUserId } = useTypedSelector((state) => state.user);
+    const {
+        data: users,
+        isLoading,
+        isError,
+        isSuccess,
+    } = userAPI.useFetchLoginUserQuery(currentUserId);
 
-	const { currentUserName, currentUserColor }: IusersState = useTypedSelector(
-		(state) => state.usersReducer,
-	)
-	if (loading) {
-		return <h1>loading</h1>
-	}
+    if (isLoading) {
+        return <h1>loading</h1>;
+    }
 
-	if (error) {
-		return <h1>error</h1>
-	}
+    if (isError) {
+        return <h1>error</h1>;
+    }
 
-	return (
-		<div className={styles.main}>
-			<div className={styles.profile}>
-				<Avatar picture={currentUserColor} mode={AvatarMode.circle}></Avatar>
-			</div>
-			<p>Welcome</p>
-		</div>
-	)
-}
+    return (
+        <div className={styles.main}>
+            <div className={styles.profile}>
+                <Avatar
+                    picture={isSuccess ? users[0].color : "white"}
+                    mode={"circle"}
+                ></Avatar>
+            </div>
+            <p>Welcome</p>
+        </div>
+    );
+};
 
-export default Profile
+export default Profile;

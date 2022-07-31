@@ -1,23 +1,13 @@
-import React, { FC } from 'react'
-import styles from './styles.module.css'
-import { IAvatar, AvatarMode } from './types'
+import React, { FC } from "react";
+import styles from "./styles.module.css";
+import { IAvatar } from "./types";
 
 const Avatar: FC<IAvatar> = ({ picture, mode }) => {
+    return (
+        <div className={mode} style={{ background: picture }}>
+            {picture}
+        </div>
+    );
+};
 
-	const classMode = (mode: AvatarMode) => {
-		if (mode === AvatarMode.rectangle) {
-			return styles.rectangle
-		} else if (mode === AvatarMode.circle) {
-			return styles.circles
-		}
-		return styles.rectangle
-	}
-
-	return (
-		<div className={classMode(mode)} style={{ background: picture }}>
-			{picture}
-		</div>
-	)
-}
-
-export default Avatar
+export default Avatar;

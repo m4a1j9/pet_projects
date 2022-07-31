@@ -1,30 +1,30 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-import { IusersState } from '../../store/types/usersReducerTypes'
-import Header from '../Header'
-import { IAvatar, AvatarMode } from '../UI/Avatar/types'
-import styles from './styles.module.css'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import { useTypedSelector } from "../../hooks/redux";
+import { userAPI } from "../../services/UserService";
+import Header from "../Header";
+import { IAvatar } from "../UI/Avatar/types";
+import styles from "./styles.module.css";
 
 const Layout = () => {
-	const { currentUserName, currentUserColor }: IusersState = useTypedSelector(
-		(state) => state.usersReducer,
-	)
+    const { currentUserId } = useTypedSelector((state) => state.user);
+    const { data: user, isSuccess } =
+        userAPI.useFetchLoginUserQuery(currentUserId);
 
-	const avatarOptions: IAvatar = {
-		picture: currentUserColor,
-		mode: AvatarMode.rectangle,
-	}
+    const avatarOptions: IAvatar = {
+        picture: isSuccess ? user[0].color : "white",
+        mode: "rectangle",
+    };
 
-	return (
-		<main className={styles.main}>
-			<Header
-				userName={currentUserName}
-				userAvatar={avatarOptions}
-			></Header>
-			<Outlet />
-		</main>
-	)
-}
+    return (
+        <main className={styles.main}>
+            <Header
+                userName={isSuccess ? user[0].userName : "name"}
+                userAvatar={avatarOptions}
+            ></Header>
+            <Outlet />
+        </main>
+    );
+};
 
-export default Layout
+export default Layout;

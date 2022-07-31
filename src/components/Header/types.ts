@@ -1,7 +1,7 @@
-import { IAvatar } from '../UI/Avatar/types'
+import { IAvatar } from "../UI/Avatar/types";
 
 export interface IHeader {
-	userName: string
-	children?: React.ReactChild
-	userAvatar: IAvatar
+    userName: string
+    children?: React.ReactChild
+    userAvatar: IAvatar
 }

@@ -1,31 +1,19 @@
-import { useDispatch } from 'react-redux'
-import { AuthAtionTypes, AuthStateType } from '../store/types/authReducerTypes'
-import { IuserAction, UsersAtionTypes } from '../store/types/usersReducerTypes'
-import { LocalStorage, LS } from '../types/localStorage'
+import { useTypedDispatch } from "../hooks/redux";
+import { authSlice } from "../store/reducers/authReducer";
+import { usersSlice } from "../store/reducers/usersReducer";
+import { LS, LocalStorage } from "../types/localStorage";
 
 const Init = () => {
-	const dispatch = useDispatch()
+    const dispatch = useTypedDispatch();
+    const { setCurrentId } = usersSlice.actions;
+    const { userLogIn } = authSlice.actions;
 
-	if (LS(LocalStorage.isAuth)) {
-		dispatch<IuserAction>({
-			type: UsersAtionTypes.SET_CURRENT_NAME,
-			payload: LS(LocalStorage.currentUserName),
-		})
-		dispatch<IuserAction>({
-			type: UsersAtionTypes.SET_CURRENT_ID,
-			payload: LS(LocalStorage.currentUserId),
-		})
-		dispatch<IuserAction>({
-			type: UsersAtionTypes.SET_CURRENT_COLOR,
-			payload: LS(LocalStorage.currentUserColor)
-		})
-		dispatch<AuthStateType>({
-			type: AuthAtionTypes.LOGIN,
-			isAuth: true,
-		})
-	}
+    if (LS(LocalStorage.isAuth)) {
+        dispatch(setCurrentId(+LS(LocalStorage.currentUserId)));
+        dispatch(userLogIn(true));
+    }
 
-	console.log('init complete')
-}
+    console.log("init complete");
+};
 
-export default Init
+export default Init;

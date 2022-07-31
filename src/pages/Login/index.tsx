@@ -1,134 +1,96 @@
-import React, { useEffect } from 'react'
-import styles from './styles.module.css'
-import { useDispatch } from 'react-redux'
-import { fetchUsers } from '../../asincActions/fetchUsers'
-import Header from '../../components/Header'
-import Hint from '../../components/UI/Hint'
-import LogInForm from '../../components/UI/LogInForm'
-import { useTypedSelector } from '../../hooks/useTypedSelector'
-import {
-	AuthAtionTypes,
-	AuthState,
-	AuthStateType,
-} from '../../store/types/authReducerTypes'
-import {
-	HintCaseType,
-	HintsActions,
-	IHintsState,
-} from '../../store/types/hintsReducerTypes'
-import {
-	IinputAction,
-	IinputState,
-	InputTypes,
-} from '../../store/types/inputReducerTypes'
-import {
-	IuserAction,
-	UsersAtionTypes,
-	IUser,
-	IusersState,
-} from '../../store/types/usersReducerTypes'
-import { LocalStorage, LS, LSMode } from '../../types/localStorage'
-import { useNavigate } from 'react-router-dom'
-import { Links } from '../../types/links'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import Hint from "../../components/UI/Hint";
+import LogInForm from "../../components/LogInForm";
+import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
+import { userAPI } from "../../services/UserService";
+import { authSlice } from "../../store/reducers/authReducer";
+import { hintsSlice } from "../../store/reducers/hintsReducer";
+import { inputSlice } from "../../store/reducers/inputReducer";
+import { usersSlice } from "../../store/reducers/usersReducer";
+import { IUser } from "../../store/types/usersReducerTypes";
+import { Links } from "../../types/links";
+import { LS, LSMode, LocalStorage } from "../../types/localStorage";
+import styles from "./styles.module.css";
 
 const Login = () => {
-	const dispatch = useDispatch()
-	const navigate = useNavigate()
+    const dispatch = useTypedDispatch();
+    const navigate = useNavigate();
+    const { setCurrentColor, setCurrentId, setCurrentName } =
+        usersSlice.actions;
+    const { showEnterHint } = hintsSlice.actions;
+    const { setLogin, setPassworD } = inputSlice.actions;
+    const { userLogIn } = authSlice.actions;
+    const userLogin = useTypedSelector((state) => state.input);
+    const isAuth = useTypedSelector((state) => state.auth);
+    const hints = useTypedSelector((state) => state.hints);
 
-	const { users, loading, error } = useTypedSelector(
-		(state) => state.usersReducer,
-	)
-	const userLogin: IinputState = useTypedSelector(
-		(state) => state.inputReducer,
-	)
-	const isAuth: AuthState = useTypedSelector((state) => state.authReducer)
-	const hints: IHintsState = useTypedSelector((state) => state.hintsReducer)
+    const {
+        data: users,
+        isLoading,
+        isError,
+        isSuccess,
+    } = userAPI.useFetchAllUsersQuery(0);
 
-	function checkLogin() {
-		users.forEach((user: IUser) => {
-			if (
-				userLogin.login === user.login &&
-				userLogin.password === user.password
-			) {
-				dispatch<AuthStateType>({
-					type: AuthAtionTypes.LOGIN,
-					isAuth: true,
-				})
-				LS(LocalStorage.isAuth, true, LSMode.set)
-				LS(LocalStorage.currentUserName, user.login, LSMode.set)
-				LS(LocalStorage.currentUserId, user.id, LSMode.set)
-				LS(LocalStorage.currentUserColor, user.color, LSMode.set)
+    function checkLogin() {
+        isSuccess &&
+            users.forEach((user: IUser) => {
+                if (
+                    userLogin.login === user.login &&
+                    userLogin.password === user.password
+                ) {
+                    LS(LocalStorage.isAuth, true, LSMode.set);
+                    LS(LocalStorage.currentUserId, user.id, LSMode.set);
 
-				dispatch<IuserAction>({
-					type: UsersAtionTypes.SET_CURRENT_NAME,
-					payload: user.login,
-				})
-				dispatch<IuserAction>({
-					type: UsersAtionTypes.SET_CURRENT_ID,
-					payload: +user.id,
-				})
-				dispatch<IuserAction>({
-					type: UsersAtionTypes.SET_CURRENT_COLOR,
-					payload: user.color,
-				})
+                    dispatch(userLogIn(true));
+                    dispatch(setCurrentColor(user.login));
+                    dispatch(setCurrentId(+user.id));
+                    dispatch(setCurrentName(user.color));
 
-				navigate(Links.profile, { replace: true })
-			}
-		})
+                    navigate(Links.profile, { replace: true });
+                }
+            });
 
-		if (isAuth.isAuth) {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_ENTER_HINT,
-				enterHint: false,
-			})
-		} else {
-			dispatch<HintCaseType>({
-				type: HintsActions.SHOW_ENTER_HINT,
-				enterHint: true,
-			})
-		}
-	}
+        if (isAuth.isAuth) {
+            dispatch(showEnterHint(false));
+        } else {
+            dispatch(showEnterHint(true));
+        }
+    }
 
-	useEffect(() => {
-		dispatch<any>(fetchUsers())
-	}, [])
+    function setUserLogin(event: React.ChangeEvent<HTMLInputElement>) {
+        dispatch(setLogin(event.target.value));
+    }
 
-	function setLogin(event: React.ChangeEvent<HTMLInputElement>) {
-		dispatch<IinputAction>({
-			type: InputTypes.SET_LOGIN,
-			value: event.target.value,
-		})
-	}
+    function setPassword(event: React.ChangeEvent<HTMLInputElement>) {
+        dispatch(setPassworD(event.target.value));
+    }
 
-	function setPassword(event: React.ChangeEvent<HTMLInputElement>) {
-		dispatch<IinputAction>({
-			type: InputTypes.SET_PASSWORD,
-			value: event.target.value,
-		})
-	}
+    if (isLoading) {
+        return <h1>...loading</h1>;
+    }
 
-	if (loading) {
-		return <h1>...loading</h1>
-	}
+    if (isError) {
+        return <h1>{isError}</h1>;
+    }
 
-	if (error) {
-		return <h1>{error}</h1>
-	}
+    return (
+        <div>
+            <div className={styles.loginForm}>
+                <LogInForm
+                    inputActionTypes={{
+                        login: setUserLogin,
+                        password: setPassword,
+                    }}
+                    buttonAction={checkLogin}
+                ></LogInForm>
+            </div>
+            {hints.enterHint ? (
+                <Hint>uncorrected login or password</Hint>
+            ) : null}
+        </div>
+    );
+};
 
-	return (
-		<div>
-			<div className={styles.loginForm}>
-				<LogInForm
-					inputActionTypes={{
-						login: setLogin,
-						password: setPassword,
-					}}
-					buttonAction={checkLogin}
-				></LogInForm>
-			</div>
-			{hints.enterHint ? <Hint>uncorrect login or password</Hint> : null}
-		</div>
-	)
-}
-
-export default Login
+export default Login;

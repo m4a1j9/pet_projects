@@ -1,38 +1,34 @@
-import {
-	HintCaseType,
-	HintsActions,
-	IHintsState,
-} from '../types/hintsReducerTypes'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IHintsState } from "../types/hintsReducerTypes";
 
-const defaultState: IHintsState = {
-	loginHint: false,
-	passwordHint: false,
-	nameHint: false,
-	emailHint: false,
-	enterHint: false,
-}
+const initialState: IHintsState = {
+    loginHint: false,
+    passwordHint: false,
+    nameHint: false,
+    emailHint: false,
+    enterHint: false,
+};
 
-export const hintsReducer = (
-	state = defaultState,
-	action: HintCaseType,
-): IHintsState => {
-	switch (action.type) {
-		case HintsActions.SHOW_LOGIN_HINT:
-			return { ...state, loginHint: action.loginHint }
+export const hintsSlice = createSlice({
+    name: "hints",
+    initialState,
+    reducers: {
+        showLoginHint(state, action: PayloadAction<boolean>) {
+            state.loginHint = action.payload;
+        },
+        showPasswordHint(state, action: PayloadAction<boolean>) {
+            state.passwordHint = action.payload;
+        },
+        showNameHint(state, action: PayloadAction<boolean>) {
+            state.nameHint = action.payload;
+        },
+        showEmailHint(state, action: PayloadAction<boolean>) {
+            state.emailHint = action.payload;
+        },
+        showEnterHint(state, action: PayloadAction<boolean>) {
+            state.enterHint = action.payload;
+        },
+    },
+});
 
-		case HintsActions.SHOW_PASSWORD_HINT:
-			return { ...state, passwordHint: action.passwordHint }
-
-		case HintsActions.SHOW_NAME_HINT:
-			return { ...state, nameHint: action.nameHint }
-
-		case HintsActions.SHOW_EMAIL_HINT:
-			return { ...state, emailHint: action.emailHint }
-
-		case HintsActions.SHOW_ENTER_HINT:
-			return { ...state, enterHint: action.enterHint }
-
-		default:
-			return state
-	}
-}
+export default hintsSlice.reducer;
