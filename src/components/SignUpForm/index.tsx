@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 import { useTypedSelector } from "../../hooks/redux";
 import { IHintsState } from "../../store/types/hintsReducerTypes";
-import { Links } from "../../types/links";
+import { Links } from "../../router/links";
 import Hint from "../UI/Hint";
 import MyButton from "../UI/MyButton";
 import MyInput from "../UI/MyInput";

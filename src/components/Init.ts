@@ -13,7 +13,7 @@ const Init = () => {
         dispatch(userLogIn(true));
     }
 
-    console.log("init complete");
+    console.log("init complete2");
 };
 
 export default Init;

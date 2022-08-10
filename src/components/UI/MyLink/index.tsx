@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { Links } from "../../../types/links";
+import { Links } from "../../../router/links";
 import styles from "./styles.module.css";
 import { ImyLink } from "./types";
 

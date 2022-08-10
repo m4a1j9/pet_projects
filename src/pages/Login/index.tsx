@@ -1,4 +1,5 @@
 import React from "react";
+import {batch} from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import Hint from "../../components/UI/Hint";
@@ -10,7 +11,7 @@ import { hintsSlice } from "../../store/reducers/hintsReducer";
 import { inputSlice } from "../../store/reducers/inputReducer";
 import { usersSlice } from "../../store/reducers/usersReducer";
 import { IUser } from "../../store/types/usersReducerTypes";
-import { Links } from "../../types/links";
+import { Links } from "../../router/links";
 import { LS, LSMode, LocalStorage } from "../../types/localStorage";
 import styles from "./styles.module.css";
 
@@ -42,11 +43,12 @@ const Login = () => {
                 ) {
                     LS(LocalStorage.isAuth, true, LSMode.set);
                     LS(LocalStorage.currentUserId, user.id, LSMode.set);
-
-                    dispatch(userLogIn(true));
-                    dispatch(setCurrentColor(user.login));
-                    dispatch(setCurrentId(+user.id));
-                    dispatch(setCurrentName(user.color));
+                    batch(() => {
+                        dispatch(userLogIn(true));
+                        dispatch(setCurrentColor(user.login));
+                        dispatch(setCurrentId(+user.id));
+                        dispatch(setCurrentName(user.color));
+                    });
 
                     navigate(Links.profile, { replace: true });
                 }

@@ -5,7 +5,7 @@ export enum LocalStorage {
     isAuth = "isAuth",
 }
 
-type LSValue = string | number | boolean
+type LSValue = string | number | boolean;
 
 export enum LSMode {
     set = "set",

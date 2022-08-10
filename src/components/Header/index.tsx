@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useTypedDispatch, useTypedSelector } from "../../hooks/redux";
 import { authSlice } from "../../store/reducers/authReducer";
-import { Links } from "../../types/links";
+import { Links } from "../../router/links";
 import { LS, LSMode, LocalStorage } from "../../types/localStorage";
 import { IDropListValue } from "../UI/DropList/types";
 import DropMenu from "../UI/DropMenu";

@@ -3,8 +3,9 @@ import Login from "../pages/Login";
 import MainPage from "../pages/MainPage";
 import Profile from "../pages/Profile";
 import SignUp from "../pages/SignUp";
-import Ches from "../pages/Chess";
-import { Links } from "../types/links";
+import Chess from "../pages/Chess";
+import { Links } from "./links";
+import ChessFC from "../pages/ChessFC";
 
 interface RouteInt {
     path: string;
@@ -14,7 +15,8 @@ interface RouteInt {
 export const privateRoutes: RouteInt[] = [
     { path: Links.profile, element: <Profile /> },
     { path: Links.mainPage, element: <MainPage /> },
-    { path: Links.chess, element: <Ches /> },
+    { path: Links.chess, element: <Chess /> },
+    { path: Links.chessFC, element: <ChessFC /> },
     { path: Links.any, element: <MainPage /> },
 ];
 

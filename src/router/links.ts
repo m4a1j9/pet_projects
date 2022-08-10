@@ -5,6 +5,7 @@ export enum Links {
     signup = "/signup",
     profile = "/profile",
     chess = "/chess",
+    chessFC = "/chessFC",
     settings = "profile/settings",
     any = "*",
 }

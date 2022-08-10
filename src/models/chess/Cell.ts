@@ -25,7 +25,7 @@ export class Cell implements ICell {
         this.figure = figure;
         this.board = board;
         this.available = false;
-        this.id = Math.random();
+        this.id = 1;
     }
 
     public isEmpty(): boolean {

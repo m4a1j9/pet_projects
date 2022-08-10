@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Links } from "../../types/links";
+import { Links } from "../../router/links";
 import MyButton from "../UI/MyButton";
 import MyInput from "../UI/MyInput";
 import MyLink from "../UI/MyLink";

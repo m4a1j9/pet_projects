@@ -1,4 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { batchedSubscribe } from "redux-batched-subscribe";
+import _ from "lodash";
 
 import { userAPI } from "../services/UserService";
 import auth from "./reducers/authReducer";
@@ -18,11 +20,14 @@ const rootReducer = combineReducers({
     [userAPI.reducerPath]: userAPI.reducer,
 });
 
+const debounceNotify = _.debounce(notify => notify());
+
 export const setupStore = () => {
     return configureStore({
         reducer: rootReducer,
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware().concat(userAPI.middleware),
+        enhancers: [batchedSubscribe(debounceNotify)],
     });
 };
 

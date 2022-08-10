@@ -1,5 +1,6 @@
 import validator from "email-validator";
 import React from "react";
+import { batch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import SignUpForm from "../../components/SignUpForm";
@@ -11,7 +12,7 @@ import { hintsSlice } from "../../store/reducers/hintsReducer";
 import { inputSlice } from "../../store/reducers/inputReducer";
 import { usersSlice } from "../../store/reducers/usersReducer";
 import { IUser } from "../../store/types/usersReducerTypes";
-import { Links } from "../../types/links";
+import { Links } from "../../router/links";
 import { LS, LSMode, LocalStorage } from "../../types/localStorage";
 
 const SignUp = () => {
@@ -21,13 +22,15 @@ const SignUp = () => {
         hintsSlice.actions;
     const { isSignUpButton } = buttonSlice.actions;
     const { setEmail, setLogin, setName, setPassworD } = inputSlice.actions;
-    const { setCurrentId, setCurrentColor, setCurrentName } = usersSlice.actions;
+    const { setCurrentId, setCurrentColor, setCurrentName } =
+        usersSlice.actions;
     const { userLogIn } = authSlice.actions;
     const { login, password, email, name } = useTypedSelector(
         (state) => state.input,
     );
     const { isDisSignUp } = useTypedSelector((state) => state.button);
-    const [createUser, { isError, isLoading }] = userAPI.useCreateUserMutation();
+    const [createUser, { isError, isLoading }] =
+        userAPI.useCreateUserMutation();
 
     async function putData() {
         if (isDisSignUp) {
@@ -41,10 +44,12 @@ const SignUp = () => {
         } as IUser)
             .unwrap()
             .then((fulfilled) => {
-                dispatch(setCurrentId(+fulfilled.id));
-                dispatch(setCurrentColor(fulfilled.color));
-                dispatch(setCurrentName(fulfilled.userName));
-                dispatch(userLogIn(true));
+                batch(() => {
+                    dispatch(setCurrentId(+fulfilled.id));
+                    dispatch(setCurrentColor(fulfilled.color));
+                    dispatch(setCurrentName(fulfilled.userName));
+                    dispatch(userLogIn(true));
+                });
                 LS(LocalStorage.isAuth, true, LSMode.set);
                 navigate(Links.profile, { replace: true });
             })
@@ -53,45 +58,61 @@ const SignUp = () => {
 
     function setLoginF(event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target.value.length > 5) {
-            dispatch(setLogin(event.target.value));
-            dispatch(showLoginHint(false));
-            dispatch(isSignUpButton(false));
+            batch(() => {
+                dispatch(setLogin(event.target.value));
+                dispatch(showLoginHint(false));
+                dispatch(isSignUpButton(false));
+            });
         } else {
-            dispatch(showLoginHint(true));
-            dispatch(isSignUpButton(true));
+            batch(() => {
+                dispatch(showLoginHint(true));
+                dispatch(isSignUpButton(true));
+            });
         }
     }
 
     function setEmailF(event: React.ChangeEvent<HTMLInputElement>) {
         if (validator.validate(event.target.value)) {
-            dispatch(setEmail(event.target.value));
-            dispatch(showEmailHint(false));
-            dispatch(isSignUpButton(false));
+            batch(() => {
+                dispatch(setEmail(event.target.value));
+                dispatch(showEmailHint(false));
+                dispatch(isSignUpButton(false));
+            });
         } else {
-            dispatch(showEmailHint(true));
-            dispatch(isSignUpButton(true));
+            batch(() => {
+                dispatch(showEmailHint(true));
+                dispatch(isSignUpButton(true));
+            });
         }
     }
 
     function setPasswordF(event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target.value.length > 5) {
-            dispatch(setPassworD(event.target.value));
-            dispatch(showPasswordHint(false));
-            dispatch(isSignUpButton(false));
+            batch(() => {
+                dispatch(setPassworD(event.target.value));
+                dispatch(showPasswordHint(false));
+                dispatch(isSignUpButton(false));
+            });
         } else {
-            dispatch(showPasswordHint(true));
-            dispatch(isSignUpButton(true));
+            batch(() => {
+                dispatch(showPasswordHint(true));
+                dispatch(isSignUpButton(true));
+            });
         }
     }
 
     function setNameF(event: React.ChangeEvent<HTMLInputElement>) {
         if (event.target.value.length > 5) {
-            dispatch(setName(event.target.value));
-            dispatch(showNameHint(false));
-            dispatch(isSignUpButton(false));
+            batch(() => {
+                dispatch(setName(event.target.value));
+                dispatch(showNameHint(false));
+                dispatch(isSignUpButton(false));
+            });
         } else {
-            dispatch(showNameHint(true));
-            dispatch(isSignUpButton(true));
+            batch(() => {
+                dispatch(showNameHint(true));
+                dispatch(isSignUpButton(true));
+            });
         }
     }
 
