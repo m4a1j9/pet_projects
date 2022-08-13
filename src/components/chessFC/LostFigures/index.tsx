@@ -1,18 +1,15 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, memo } from "react";
 import { useTypedSelector } from "../../../hooks/redux";
 import { Colors } from "../../../models/chess/Colors";
-import { IBoard } from "../../../store/types/chessReducerTypes";
+import { allLostFigures } from "../../../store/selectors/chessSelectors";
 import { setSrc } from "../figures";
 import style from "./style.module.css";
 import { ILostFigures } from "./types";
 
 const LostFigures: FC<ILostFigures> = ({ title, type }) => {
-    const { lostWhiteFigures, lostBlackFigures } = useTypedSelector(
-        (state) => state.chessBoard.board,
-    );
+    const { lostBlackFigures, lostWhiteFigures } =
+        useTypedSelector(allLostFigures);
 
-    useMemo(() => console.log("memo"), [lostWhiteFigures, lostBlackFigures]);
-    console.log("updated");
     return (
         <div className={style.lost}>
             <h3>{title}</h3>
@@ -46,12 +43,16 @@ const LostFigures: FC<ILostFigures> = ({ title, type }) => {
                               </div>
                           ) : null;
                       })}
-                {/*{board[figures] && figures.length > 4 && (*/}
-                {/*    <div>+ {figures.length - 4}</div>*/}
-                {/*)}*/}
+                {type === Colors.WHITE
+                    ? lostWhiteFigures.length > 4 && (
+                        <div>+ {lostWhiteFigures.length - 4}</div>
+                    )
+                    : lostBlackFigures.length > 4 && (
+                        <div>+ {lostBlackFigures.length - 4}</div>
+                    )}
             </div>
         </div>
     );
 };
 
-export default LostFigures;
+export default memo(LostFigures);

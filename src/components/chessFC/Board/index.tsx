@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Colors } from "../../../models/chess/Colors";
+import {selectB} from "../../../store/selectors/chessSelectors";
 import style from "../../chess/BoardComponnent/style.module.css";
 import { FigureNames, ICell } from "../../../store/types/chessReducerTypes";
 import Cell from "../Cell";
@@ -12,6 +13,7 @@ const Board = () => {
     const { selectedCell, currentPlayer, board, isBoardEnable } = useTypedSelector(
         (state) => state.chessBoard,
     );
+
     const {
         selectCell,
         swapPlayer,

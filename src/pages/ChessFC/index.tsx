@@ -4,13 +4,18 @@ import LostFigures from "../../components/chessFC/LostFigures";
 import Timer from "../../components/chessFC/Timer";
 import { useTypedSelector } from "../../hooks/redux";
 import { Colors } from "../../models/chess/Colors";
+import {
+    selectPlayer,
+    selectWinner,
+} from "../../store/selectors/chessSelectors";
 import style from "../Chess/style.module.css";
 
 const ChessFC = () => {
-    const { currentPlayer, board, winner } = useTypedSelector(
-        (state) => state.chessBoard,
-    );
+    const currentPlayer = useTypedSelector(selectPlayer);
+    const winner = useTypedSelector(selectWinner);
+
     const [modal, setModal] = useState(true);
+
     return (
         <div className={style.main}>
             <Timer currentPlayer={currentPlayer}></Timer>
@@ -31,14 +36,8 @@ const ChessFC = () => {
                 </div>
             </div>
             <div className={style.lostWrap}>
-                <LostFigures
-                    title="Black figures"
-                    type={Colors.BLACK}
-                />
-                <LostFigures
-                    title="White figures"
-                    type={Colors.WHITE}
-                />
+                <LostFigures title="Black figures" type={Colors.BLACK} />
+                <LostFigures title="White figures" type={Colors.WHITE} />
             </div>
         </div>
     );

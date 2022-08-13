@@ -52,10 +52,10 @@ export const chessSlice = createSlice({
             state.currentPlayer = action.payload;
         },
         addLostWhiteFigure(state, action: PayloadAction<IFigure>) {
-            state.board.lostWhiteFigures.push(action.payload);
+            state.board.lostWhiteFigures.unshift(action.payload);
         },
         addLostBlackFigures(state, action: PayloadAction<IFigure>) {
-            state.board.lostBlackFigures.push(action.payload);
+            state.board.lostBlackFigures.unshift(action.payload);
         },
         setWinner(state, action: PayloadAction<Colors | null>){
             state.winner = action.payload;
