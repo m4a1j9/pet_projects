@@ -15,7 +15,9 @@ const initialState: IInitialState = {
     },
     selectedCell: null,
     currentPlayer: Colors.WHITE,
-    winner: null
+    winner: null,
+    winnerModal: true,
+    isBoardEnable: false
 };
 
 export const chessSlice = createSlice({
@@ -55,8 +57,14 @@ export const chessSlice = createSlice({
         addLostBlackFigures(state, action: PayloadAction<IFigure>) {
             state.board.lostBlackFigures.push(action.payload);
         },
-        setWinner(state, action: PayloadAction<Colors>){
+        setWinner(state, action: PayloadAction<Colors | null>){
             state.winner = action.payload;
+        },
+        showWinnerModal(state, action: PayloadAction<boolean>) {
+            state.winnerModal = action.payload;
+        },
+        enableBoard(state, action: PayloadAction<boolean>) {
+            state.isBoardEnable = action.payload;
         }
     },
 });

@@ -1,5 +1,4 @@
 .lost{
-    height: calc(50vh - 60px);
     padding: 30px;
     margin-left: 50px;
     background: #d0c6b2;
@@ -8,4 +7,9 @@
 .figure_logo {
     width: 20px;
     height: 20px;
+}
+
+.lostListWrap {
+    display: flex;
+    flex-direction: row;
 }

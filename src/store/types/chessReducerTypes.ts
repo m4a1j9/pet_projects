@@ -5,6 +5,8 @@ export interface IInitialState {
     selectedCell: ICell | null;
     currentPlayer: Colors;
     winner: Colors | null;
+    winnerModal: boolean;
+    isBoardEnable: boolean;
 }
 
 export interface IBoard {
@@ -25,7 +27,7 @@ export interface ICell {
 export interface IFigure {
     name: FigureNames;
     color: Colors;
-    logo: string | null;
+    logo: FigureLogos | null;
     isFirstStep: boolean;
 }
 
@@ -36,4 +38,19 @@ export enum FigureNames {
     PAWN = "PAWN",
     QUEEN = "QUEEN",
     ROOK = "ROOK",
+}
+
+export enum FigureLogos {
+    PAWN_W = "PAWN_W",
+    KING_W = "KING_W",
+    QUEEN_W = "QUEEN_W",
+    BISHOP_W = "BISHOP_W",
+    ROOK_W = "ROOK_W",
+    KNIGHT_W = "KNIGHT_W",
+    PAWN_B = "PAWN_B",
+    KING_B = "KING_B",
+    QUEEN_B = "QUEEN_B",
+    BISHOP_B = "BISHOP_B",
+    ROOK_B = "ROOK_B",
+    KNIGHT_B = "KNIGHT_B",
 }

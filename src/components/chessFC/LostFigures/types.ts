@@ -1,6 +1,6 @@
-import { IFigure } from "../../../store/types/chessReducerTypes";
+import {Colors} from "../../../models/chess/Colors";
 
 export interface ILostFigures {
     title: string;
-    figures: IFigure[] | null;
+    type: Colors;
 }

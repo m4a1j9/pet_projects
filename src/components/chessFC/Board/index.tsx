@@ -9,7 +9,7 @@ import { createCellsWithFigures } from "../createNewBoard";
 
 const Board = () => {
     const dispatch = useTypedDispatch();
-    const { selectedCell, currentPlayer, board } = useTypedSelector(
+    const { selectedCell, currentPlayer, board, isBoardEnable } = useTypedSelector(
         (state) => state.chessBoard,
     );
     const {
@@ -27,6 +27,9 @@ const Board = () => {
     }, []);
 
     function click(cell: ICell) {
+        if (!isBoardEnable) {
+            return;
+        }
         if (selectedCell && selectedCell !== cell && cell.available) {
             moveFigureF(cell);
             dispatch(extinguishCells());
