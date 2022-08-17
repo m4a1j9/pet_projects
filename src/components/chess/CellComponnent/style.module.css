@@ -31,6 +31,25 @@
     background: #85d26a;
 }
 
+.availableForW {
+    border: solid 1px #ffffff;
+}
+
+.availableForB {
+    border: solid 1px #000000;
+}
+
+.availableForW.availableForB {
+    border: solid 1px #888888;
+}
+
+.kingAnderAttack {
+    background: #d54848;
+}
+
+.aggressor {
+    background: #ffd900;
+}
 .attack {
     background: #e27777;
 }

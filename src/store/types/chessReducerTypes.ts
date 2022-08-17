@@ -1,5 +1,10 @@
 import { Colors } from "../../models/chess/Colors";
 
+export enum ECellAnderAttack {
+    IS_WHITE = "isAvailableForWhite",
+    IS_BLACK ="isAvailableForBlack"
+}
+
 export interface IInitialState {
     board: IBoard;
     selectedCell: ICell | null;
@@ -7,6 +12,14 @@ export interface IInitialState {
     winner: Colors | null;
     winnerModal: boolean;
     isBoardEnable: boolean;
+    isKingAnderAttack: IAttackedKings;
+    kingMustEscape: boolean;
+    aggressorMustBeKilled: boolean;
+}
+
+export interface IAttackedKings {
+    [Colors.WHITE]: boolean;
+    [Colors.BLACK]: boolean;
 }
 
 export interface IBoard {
@@ -22,6 +35,9 @@ export interface ICell {
     figure: IFigure | null;
     id: number;
     available: boolean;
+    [ECellAnderAttack.IS_WHITE]: number;
+    [ECellAnderAttack.IS_BLACK]: number;
+    isAggressor: boolean;
 }
 
 export interface IFigure {

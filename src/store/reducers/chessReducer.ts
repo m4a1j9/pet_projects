@@ -17,7 +17,13 @@ const initialState: IInitialState = {
     currentPlayer: Colors.WHITE,
     winner: null,
     winnerModal: true,
-    isBoardEnable: false
+    isBoardEnable: false,
+    isKingAnderAttack: {
+        white: false,
+        black: false,
+    },
+    kingMustEscape: false,
+    aggressorMustBeKilled: false,
 };
 
 export const chessSlice = createSlice({
@@ -37,13 +43,13 @@ export const chessSlice = createSlice({
         },
         moveFigure(state, action: PayloadAction<ICell>) {
             state.selectedCell!.figure!.isFirstStep = false;
+
             state.board.cells[action.payload.y][action.payload.x].figure =
-                state.selectedCell?.figure ?? null;
-            state.selectedCell
-                ? (state.board.cells[state.selectedCell?.y][
-                    state.selectedCell?.x
-                ].figure = null)
-                : null;
+                state.selectedCell!.figure;
+
+            state.board.cells[state.selectedCell!.y][
+                state.selectedCell!.x
+            ].figure = null;
         },
         selectCell(state, action: PayloadAction<ICell | null>) {
             state.selectedCell = action.payload;
@@ -57,7 +63,7 @@ export const chessSlice = createSlice({
         addLostBlackFigures(state, action: PayloadAction<IFigure>) {
             state.board.lostBlackFigures.unshift(action.payload);
         },
-        setWinner(state, action: PayloadAction<Colors | null>){
+        setWinner(state, action: PayloadAction<Colors | null>) {
             state.winner = action.payload;
         },
         showWinnerModal(state, action: PayloadAction<boolean>) {
@@ -65,7 +71,27 @@ export const chessSlice = createSlice({
         },
         enableBoard(state, action: PayloadAction<boolean>) {
             state.isBoardEnable = action.payload;
-        }
+        },
+        disableToMoveAllToAll(state) {
+            state.board.cells.map((row) =>
+                row.map((cell) => {
+                    cell.isAvailableForWhite = 0;
+                    cell.isAvailableForBlack = 0;
+                }),
+            );
+        },
+        setWhiteRisk(state, action: PayloadAction<boolean>) {
+            state.isKingAnderAttack[Colors.WHITE] = action.payload;
+        },
+        setBlackRisk(state, action: PayloadAction<boolean>) {
+            state.isKingAnderAttack[Colors.BLACK] = action.payload;
+        },
+        AKingMustEscape(state, action: PayloadAction<boolean>) {
+            state.kingMustEscape = action.payload;
+        },
+        AAggressorMustBeKilled(state, action: PayloadAction<boolean>) {
+            state.aggressorMustBeKilled = action.payload;
+        },
     },
 });
 

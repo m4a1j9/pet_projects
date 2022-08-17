@@ -1,18 +1,18 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { batch } from "react-redux";
+import { useTypedDispatch } from "../../../hooks/redux";
+import { Colors } from "../../../models/chess/Colors";
+import { chessSlice } from "../../../store/reducers/chessReducer";
 import MyButton from "../../UI/MyButton";
 import { createCellsWithFigures } from "../createNewBoard";
 import { ITimer } from "./types";
-import { Colors } from "../../../models/chess/Colors";
-import { useTypedDispatch } from "../../../hooks/redux";
-import { chessSlice } from "../../../store/reducers/chessReducer";
 
 const Timer: FC<ITimer> = ({ currentPlayer }) => {
     const dispatch = useTypedDispatch();
-    const { showWinnerModal, setWinner, setBoard, enableBoard, extinguishCells, selectCell } =
+    const { showWinnerModal, setWinner, setBoard, enableBoard, extinguishCells, selectCell, swapPlayer } =
         chessSlice.actions;
-    const [blackTime, setBlackTime] = useState(50); // 300
-    const [whiteTime, setWhiteTime] = useState(50);
+    const [blackTime, setBlackTime] = useState(300); // 300
+    const [whiteTime, setWhiteTime] = useState(300);
     const [firstGame, setFirstGame] = useState(true);
     const timer = useRef<null | ReturnType<typeof setInterval>>(null);
     const isInitialMount = useRef(true);
@@ -69,8 +69,8 @@ const Timer: FC<ITimer> = ({ currentPlayer }) => {
         if (firstGame) {
             setFirstGame(false);
         } else {
-            setBlackTime(5);
-            setWhiteTime(5);
+            setBlackTime(300); // 300
+            setWhiteTime(300);
             batch(() => {
                 dispatch(
                     setBoard({
@@ -81,6 +81,7 @@ const Timer: FC<ITimer> = ({ currentPlayer }) => {
                 );
                 dispatch(setWinner(null));
                 dispatch(showWinnerModal(true));
+                dispatch(swapPlayer(Colors.WHITE));
             });
         }
         dispatch(enableBoard(true));
