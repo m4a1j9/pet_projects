@@ -12,14 +12,9 @@ export interface IInitialState {
     winner: Colors | null;
     winnerModal: boolean;
     isBoardEnable: boolean;
-    isKingAnderAttack: IAttackedKings;
+    isKingAnderAttack: boolean;
     kingMustEscape: boolean;
     aggressorMustBeKilled: boolean;
-}
-
-export interface IAttackedKings {
-    [Colors.WHITE]: boolean;
-    [Colors.BLACK]: boolean;
 }
 
 export interface IBoard {

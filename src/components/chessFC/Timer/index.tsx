@@ -9,8 +9,18 @@ import { ITimer } from "./types";
 
 const Timer: FC<ITimer> = ({ currentPlayer }) => {
     const dispatch = useTypedDispatch();
-    const { showWinnerModal, setWinner, setBoard, enableBoard, extinguishCells, selectCell, swapPlayer } =
-        chessSlice.actions;
+    const {
+        showWinnerModal,
+        setWinner,
+        setBoard,
+        enableBoard,
+        extinguishCells,
+        selectCell,
+        swapPlayer,
+        AKingMustEscape,
+        AAggressorMustBeKilled,
+        setKingsRisk
+    } = chessSlice.actions;
     const [blackTime, setBlackTime] = useState(300); // 300
     const [whiteTime, setWhiteTime] = useState(300);
     const [firstGame, setFirstGame] = useState(true);
@@ -82,6 +92,9 @@ const Timer: FC<ITimer> = ({ currentPlayer }) => {
                 dispatch(setWinner(null));
                 dispatch(showWinnerModal(true));
                 dispatch(swapPlayer(Colors.WHITE));
+                dispatch(AKingMustEscape(false));
+                dispatch(AAggressorMustBeKilled(false));
+                dispatch(setKingsRisk(false));
             });
         }
         dispatch(enableBoard(true));

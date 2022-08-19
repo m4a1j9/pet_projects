@@ -18,10 +18,7 @@ const initialState: IInitialState = {
     winner: null,
     winnerModal: true,
     isBoardEnable: false,
-    isKingAnderAttack: {
-        white: false,
-        black: false,
-    },
+    isKingAnderAttack: false,
     kingMustEscape: false,
     aggressorMustBeKilled: false,
 };
@@ -80,11 +77,8 @@ export const chessSlice = createSlice({
                 }),
             );
         },
-        setWhiteRisk(state, action: PayloadAction<boolean>) {
-            state.isKingAnderAttack[Colors.WHITE] = action.payload;
-        },
-        setBlackRisk(state, action: PayloadAction<boolean>) {
-            state.isKingAnderAttack[Colors.BLACK] = action.payload;
+        setKingsRisk(state, action: PayloadAction<boolean>) {
+            state.isKingAnderAttack = action.payload;
         },
         AKingMustEscape(state, action: PayloadAction<boolean>) {
             state.kingMustEscape = action.payload;
