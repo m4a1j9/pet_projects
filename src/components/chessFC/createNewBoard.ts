@@ -4,41 +4,43 @@ import { Figures } from "./figures";
 
 export function createCellsWithFigures() {
     const cells: ICell[][] = [];
-    for (let i = 0; i < 8; i++) {
+    for (let y = 0; y < 8; y++) {
         const row: ICell[] = [];
-        for (let j = 0; j < 8; j++) {
-            if ((i + j) % 2 !== 0) {
+        for (let x = 0; x < 8; x++) {
+            if ((y + x) % 2 !== 0) {
                 row.push({
-                    x: j,
-                    y: i,
+                    x: x,
+                    y: y,
                     color: Colors.BLACK,
                     figure: null,
                     id: Math.random(),
                     available: false,
                     isAvailableForWhite: 0,
                     isAvailableForBlack: 0,
-                    isAggressor: false
+                    isAggressor: false,
+                    defenderMustStay: null,
                 });
             } else {
                 row.push({
-                    x: j,
-                    y: i,
+                    x: x,
+                    y: y,
                     color: Colors.WHITE,
                     figure: null,
                     id: Math.random(),
                     available: false,
                     isAvailableForWhite: 0,
                     isAvailableForBlack: 0,
-                    isAggressor: false
+                    isAggressor: false,
+                    defenderMustStay: null,
                 });
             }
         }
         cells.push(row);
     }
 
-    for (let i = 0; i < 8; i++) {
-        cells[1][i].figure = Figures.PAWN_B;
-        cells[6][i].figure = Figures.PAWN_W;
+    for (let x = 0; x < 8; x++) {
+        cells[1][x].figure = Figures.PAWN_B;
+        cells[6][x].figure = Figures.PAWN_W;
     }
 
     cells[0][4].figure = Figures.KING_B;
@@ -61,38 +63,6 @@ export function createCellsWithFigures() {
     cells[0][7].figure = Figures.ROOK_B;
     cells[7][0].figure = Figures.ROOK_W;
     cells[7][7].figure = Figures.ROOK_W;
-
-    // for (let i = 0; i < 4; i++) {
-    //     const row: ICell[] = cells[i];
-    //     for (let j = 0; j < 8; j++) {
-    //         row[j].isAvailableForBlack = 1; // cells ander black attack
-    //         if (i === 2 && (j === 0 || j === 2 || j === 5 || j === 7)) {
-    //             row[j].isAvailableForBlack = 2; // for knights
-    //         }
-    //         if (i === 1 && (j === 3 || j === 4)) {
-    //             row[j].isAvailableForBlack = 4; // for knights & queen & king
-    //         }
-    //         if (i === 0 && (j === 0 || j === 7)) {
-    //             row[j].isAvailableForBlack = 0; // for rooks, it's defenseless
-    //         }
-    //     }
-    // }
-    //
-    // for (let i = 4; i < 8; i++) {
-    //     const row: ICell[] = cells[i];
-    //     for (let j = 0; j < 8; j++) {
-    //         row[j].isAvailableForWhite = 1; // cells ander white attack
-    //         if (i === 5 && (j === 0 || j === 2 || j === 5 || j === 7)) {
-    //             row[j].isAvailableForWhite = 2; // for knights
-    //         }
-    //         if (i === 6 && (j === 3 || j === 4)) {
-    //             row[j].isAvailableForWhite = 4; // for knights & queen & king
-    //         }
-    //         if (i === 7 && (j === 0 || j === 7)) {
-    //             row[j].isAvailableForWhite = 0; // for rooks, it's defenseless
-    //         }
-    //     }
-    // }
 
     return cells;
 }

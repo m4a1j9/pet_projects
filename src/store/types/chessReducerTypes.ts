@@ -33,6 +33,7 @@ export interface ICell {
     [ECellAnderAttack.IS_WHITE]: number;
     [ECellAnderAttack.IS_BLACK]: number;
     isAggressor: boolean;
+    defenderMustStay: FigureNames | null;
 }
 
 export interface IFigure {
@@ -40,6 +41,7 @@ export interface IFigure {
     color: Colors;
     logo: FigureLogos | null;
     isFirstStep: boolean;
+    kingDefender: boolean;
 }
 
 export enum FigureNames {

@@ -10,86 +10,34 @@ import whiteKnight from "../../assets/white-knight.png";
 import whitePawn from "../../assets/white-pawn.png";
 import whiteQueen from "../../assets/white-queen.png";
 import whiteRook from "../../assets/white-rook.png";
-import {
-    FigureLogos,
-    FigureNames,
-    IFigure,
-} from "../../store/types/chessReducerTypes";
-import { Colors } from "../../models/chess/Colors";
+import {Colors} from "../../models/chess/Colors";
+import {FigureLogos, FigureNames, IFigure,} from "../../store/types/chessReducerTypes";
 
-const PAWN_W: IFigure = {
-    name: FigureNames.PAWN,
-    color: Colors.WHITE,
-    logo: FigureLogos.PAWN_W,
-    isFirstStep: true,
-};
-const KING_W: IFigure = {
-    name: FigureNames.KING,
-    color: Colors.WHITE,
-    logo: FigureLogos.KING_W,
-    isFirstStep: true,
-};
-const QUEEN_W: IFigure = {
-    name: FigureNames.QUEEN,
-    color: Colors.WHITE,
-    logo: FigureLogos.QUEEN_W,
-    isFirstStep: true,
-};
-const BISHOP_W: IFigure = {
-    name: FigureNames.BISHOP,
-    color: Colors.WHITE,
-    logo: FigureLogos.BISHOP_W,
-    isFirstStep: true,
-};
-const ROOK_W: IFigure = {
-    name: FigureNames.ROOK,
-    color: Colors.WHITE,
-    logo: FigureLogos.ROOK_W,
-    isFirstStep: true,
-};
-const KNIGHT_W: IFigure = {
-    name: FigureNames.KNIGHT,
-    color: Colors.WHITE,
-    logo: FigureLogos.KNIGHT_W,
-    isFirstStep: true,
-};
+// возвращаем обычный объект, тк redux не поддерживает экземпляры функций и классов
+function CreateFigure(name: FigureNames, color: Colors, logo: FigureLogos): IFigure {
+    return {
+        name: name,
+        color: color,
+        logo: logo,
+        isFirstStep: true,
+        kingDefender: false
+    };
+}
 
-const PAWN_B: IFigure = {
-    name: FigureNames.PAWN,
-    color: Colors.BLACK,
-    logo: FigureLogos.PAWN_B,
-    isFirstStep: true,
-};
-const KING_B: IFigure = {
-    name: FigureNames.KING,
-    color: Colors.BLACK,
-    logo: FigureLogos.KING_B,
-    isFirstStep: true,
-};
-const KNIGHT_B: IFigure = {
-    name: FigureNames.KNIGHT,
-    color: Colors.BLACK,
-    logo: FigureLogos.KNIGHT_B,
-    isFirstStep: true,
-};
-const QUEEN_B: IFigure = {
-    name: FigureNames.QUEEN,
-    color: Colors.BLACK,
-    logo: FigureLogos.QUEEN_B,
-    isFirstStep: true,
-};
-const BISHOP_B: IFigure = {
-    name: FigureNames.BISHOP,
-    color: Colors.BLACK,
-    logo: FigureLogos.BISHOP_B,
-    isFirstStep: true,
-};
-const ROOK_B: IFigure = {
-    name: FigureNames.ROOK,
-    color: Colors.BLACK,
-    logo: FigureLogos.ROOK_B,
-    isFirstStep: true,
-};
+const PAWN_W = CreateFigure(FigureNames.PAWN, Colors.WHITE, FigureLogos.PAWN_W);
+const KING_W = CreateFigure(FigureNames.KING, Colors.WHITE, FigureLogos.KING_W);
+const QUEEN_W = CreateFigure(FigureNames.QUEEN, Colors.WHITE, FigureLogos.QUEEN_W);
+const BISHOP_W = CreateFigure(FigureNames.BISHOP, Colors.WHITE, FigureLogos.BISHOP_W);
+const ROOK_W = CreateFigure(FigureNames.ROOK, Colors.WHITE, FigureLogos.ROOK_W);
+const KNIGHT_W = CreateFigure(FigureNames.KNIGHT, Colors.WHITE, FigureLogos.KNIGHT_W);
+
+const PAWN_B = CreateFigure(FigureNames.PAWN, Colors.WHITE, FigureLogos.PAWN_B);
+const KING_B = CreateFigure(FigureNames.KING, Colors.WHITE, FigureLogos.KING_B);
+const QUEEN_B = CreateFigure(FigureNames.KNIGHT, Colors.WHITE, FigureLogos.KNIGHT_B);
+const BISHOP_B = CreateFigure(FigureNames.QUEEN, Colors.WHITE, FigureLogos.QUEEN_B);
+const ROOK_B = CreateFigure(FigureNames.BISHOP, Colors.WHITE, FigureLogos.BISHOP_B);
+const KNIGHT_B = CreateFigure(FigureNames.ROOK, Colors.WHITE, FigureLogos.ROOK_B);
+
 
 export const Figures = {
     PAWN_W,

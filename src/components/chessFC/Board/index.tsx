@@ -44,8 +44,8 @@ const Board = () => {
     const firstForBoard = useRef(0);
     const aggressorList: ICell[] = [];
 
-    let aggressorAmount = 0;
     let aggressorsAnderAttack = 0;
+    let kingBehindTheFigure = false;
 
     function click(cell: ICell) {
         if (!isBoardEnable) {
@@ -533,7 +533,7 @@ const Board = () => {
 
         for (let y = target.x + 1; y < 8; y++) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     target.y,
                     y,
                     bufferCells,
@@ -545,9 +545,10 @@ const Board = () => {
                 break;
             }
         }
+
         for (let y = target.x - 1; y >= 0; y--) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     target.y,
                     y,
                     bufferCells,
@@ -561,16 +562,25 @@ const Board = () => {
         }
     }
 
-    function isAttackVertical(target: ICell, bufferCells: ICell[][]) {
+    function doubleCycle90Deg(
+        target: ICell,
+        bufferCells: ICell[][],
+        condition: (i: number) => boolean,
+        modification: (i: number) => number,
+    ) {
         const isAvailable: ECellAnderAttack = colorOfExpansion(
             target.figure?.color,
         );
         const enemyKingColor: Colors =
             target.figure?.color === Colors.WHITE ? Colors.BLACK : Colors.WHITE;
+        let canMove = true;
+        let protectingFigures = 0;
+        let defenderName: FigureNames | null = null;
 
-        for (let y = target.y + 1; y < 8; y++) {
+        for (let y = target.y + 1; condition(y); y = modification(y)) {
             if (
-                !calcAttackAction(
+                canMove &&
+                !calcExpansion(
                     y,
                     target.x,
                     bufferCells,
@@ -579,23 +589,52 @@ const Board = () => {
                     target,
                 )
             ) {
-                break;
+                canMove = false;
             }
-        }
-        for (let y = target.y - 1; y >= 0; y--) {
             if (
-                !calcAttackAction(
-                    y,
-                    target.x,
-                    bufferCells,
-                    enemyKingColor,
-                    isAvailable,
-                    target,
-                )
+                !canMove &&
+                bufferCells[y][target.x].figure &&
+                bufferCells[y][target.x].figure?.name !== FigureNames.KING
             ) {
-                break;
+                protectingFigures++;
+                protectingFigures === 1
+                    ? defenderName = bufferCells[y][target.x].figure!.name
+                    : null;
+            }
+            if (
+                !canMove &&
+                bufferCells[y][target.x].figure?.name === FigureNames.KING &&
+                protectingFigures === 1
+            ) {
+                kingBehindTheFigure = true;
             }
         }
+        if (protectingFigures === 1 && kingBehindTheFigure) {
+            for (let y = target.y + 1; condition(y); modification(y)) {
+                bufferCells[y][target.x].defenderMustStay = defenderName;
+            }
+        }
+    }
+
+    function isAttackVertical(target: ICell, bufferCells: ICell[][]) {
+        function noMore(i: number): boolean {
+            return i < 8;
+        }
+
+        function increment(i: number): number {
+            return ++i;
+        }
+
+        function noLess(i: number): boolean {
+            return i > -1;
+        }
+
+        function decrement(i: number): number {
+            return --i;
+        }
+
+        doubleCycle90Deg(target, bufferCells, noMore, increment);
+        doubleCycle90Deg(target, bufferCells, noLess, decrement);
     }
 
     function isAttackDiagonal(target: ICell, bufferCells: ICell[][]) {
@@ -607,7 +646,7 @@ const Board = () => {
 
         for (let y = target.y + 1, x = target.x + 1; y < 8 && x < 8; y++, x++) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     y,
                     x,
                     bufferCells,
@@ -625,7 +664,7 @@ const Board = () => {
             y++, x--
         ) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     y,
                     x,
                     bufferCells,
@@ -643,7 +682,7 @@ const Board = () => {
             y--, x++
         ) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     y,
                     x,
                     bufferCells,
@@ -661,7 +700,7 @@ const Board = () => {
             y--, x--
         ) {
             if (
-                !calcAttackAction(
+                !calcExpansion(
                     y,
                     x,
                     bufferCells,
@@ -780,7 +819,7 @@ const Board = () => {
         calcKingsMoveAndAttack(target.y, target.x + 1);
         calcKingsMoveAndAttack(target.y, target.x - 1);
 
-        if (aggressorAmount === 1) {
+        if (aggressorList.length === 1) {
             const aggressor = aggressorList[0];
             isAggressorAnderAttack(aggressor.y, aggressor.x, bufferCells);
 
@@ -800,7 +839,7 @@ const Board = () => {
                     dispatch(selectCell(null));
                 });
             }
-        } else if (aggressorAmount === 2) {
+        } else if (aggressorList.length === 2) {
             if (availableCells) {
                 dispatch(AKingMustEscape(true));
             } else {
@@ -845,24 +884,10 @@ const Board = () => {
         ) {
             dispatch(setKingsRisk(true));
             target.isAggressor = true;
-            aggressorAmount++;
             aggressorList.push(target);
             return true;
         }
         return false;
-    }
-
-    function canAttack(
-        y: number,
-        x: number,
-        bufferCells: ICell[][],
-        enemyColor: Colors,
-    ): boolean {
-        return (
-            bufferCells[y][x].figure === null ||
-            (bufferCells[y][x].figure?.color === enemyColor &&
-                bufferCells[y][x].figure?.name === FigureNames.KING)
-        );
     }
 
     function isCellExistForAttack(
@@ -889,15 +914,20 @@ const Board = () => {
         bufferCells[y][x][enemyExpansion] ? aggressorsAnderAttack++ : null;
     }
 
-    function calcAttackAction(
+    function calcExpansion(
         y: number,
         x: number,
         bufferCells: ICell[][],
-        enemyKingColor: Colors,
+        enemyColor: Colors,
         isAvailable: ECellAnderAttack,
         target: ICell,
     ): boolean {
-        if (canAttack(y, x, bufferCells, enemyKingColor)) {
+        console.log(y, x);
+        if (
+            bufferCells[y][x].figure === null ||
+            (bufferCells[y][x].figure?.color === enemyColor &&
+                bufferCells[y][x].figure?.name === FigureNames.KING)
+        ) {
             bufferCells[y][x][isAvailable] += 1;
             calcKingsRisk(y, x, bufferCells, target);
         } else {
